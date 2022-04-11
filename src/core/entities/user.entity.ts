@@ -1,6 +1,7 @@
 import { BaseEntity } from './ base.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
+import { CartReadModel } from './cart.entity';
 
 @Entity()
 export class UserReadModel extends BaseEntity{
@@ -47,4 +48,8 @@ export class UserReadModel extends BaseEntity{
   @AutoMap()
   @Column("varchar", { array: true ,nullable:true})
   permissions:string[];
+
+
+  @OneToMany(()=>CartReadModel,(cart)=>cart.user)
+  carts:CartReadModel[];
 }

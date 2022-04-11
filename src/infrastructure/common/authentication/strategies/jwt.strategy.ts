@@ -20,6 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
 
 
   async validate(claim: any, done) {
+    console.log(claim);
     return claim;
   }
 

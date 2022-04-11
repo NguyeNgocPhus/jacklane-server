@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from './infrastructure/common/services/config/config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IConfigService } from './core/common/services/config.interface';
-import { Repository } from 'typeorm';
 import { Repositories } from './infrastructure/repositories';
 import { UserModule } from './infrastructure/components/auth/user.module';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -14,12 +13,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationModule } from './infrastructure/common/authentication/authentication.module';
 import { IsValidEmailContains } from './core/common/validator/check-valid-email.validator';
 import { IsValidPhoneContains } from './core/common/validator/check-valid-phone.validator';
-import { PassportModule } from '@nestjs/passport';
 import { PasswordModule } from './infrastructure/common/services/password/password.module';
 import { ProductModule } from './infrastructure/components/product/product.module';
 import { ProductImageModule } from './infrastructure/components/product-image/productImage.module';
 import { ProductDetailModule } from './infrastructure/components/product-detail/productDetail.module';
 import { TypeProductModule } from './infrastructure/components/type-product/typeproduct.module';
+import { CartModule } from './infrastructure/components/cart/cart.module';
+import { IsValidTypeProductContains } from './core/common/validator/check-valid-typeProduct.validator';
+import { IsValidProductContains } from './core/common/validator/check-valid-product.validator';
 
 
 @Module({
@@ -65,6 +66,7 @@ import { TypeProductModule } from './infrastructure/components/type-product/type
     ProductImageModule,
     ProductDetailModule,
     TypeProductModule,
+    CartModule,
     PasswordModule
 
   ],
@@ -73,7 +75,9 @@ import { TypeProductModule } from './infrastructure/components/type-product/type
     AppService,
     ...AutoMapppers,
     IsValidEmailContains,
-    IsValidPhoneContains
+    IsValidTypeProductContains,
+    IsValidProductContains
+    //alt + shift + enter
   ],
 })
 export class AppModule {

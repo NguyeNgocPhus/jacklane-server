@@ -1,18 +1,23 @@
 import { BaseEntity } from './ base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ProductReadModel } from './product.entity';
+import { AutoMap } from '@automapper/classes';
 
 @Entity()
 export class ProductDetailReadModel extends BaseEntity {
+  @AutoMap()
   @Column()
-  color:string;
-
+  colorName:string;
+  @AutoMap()
+  @Column()
+  colorCode:string;
+  @AutoMap()
   @Column("varchar", { array: true })
   size:string[];
-
+  @AutoMap()
   @Column()
-  amount:number
-
+  amount:number;
+  @AutoMap()
   @Column()
   productId:string;
 

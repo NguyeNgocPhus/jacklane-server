@@ -53,5 +53,5 @@ export class CreateUserDto{
 
   @AutoMap()
   @IsArray()
-  roles:string[];
+  permissions:string[];
 }
