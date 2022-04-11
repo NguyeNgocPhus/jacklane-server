@@ -7,10 +7,13 @@ import { UserRepository } from '../../repositories/user.repository';
 import { ConfigModule } from '../../common/services/config/config.module';
 import { JwtModule } from '@nestjs/jwt';
 import { IConfigService } from '../../../core/common/services/config.interface';
+import { PassportModule } from '@nestjs/passport';
+import { IPasswordService } from '../../../core/common/services/passoword.interface';
+import { PasswordModule } from '../../common/services/password/password.module';
 
 
 @Module({
-  imports:[TypeOrmModule.forFeature([UserRepository]),ConfigModule,JwtModule.registerAsync({
+  imports:[TypeOrmModule.forFeature([UserRepository]),PasswordModule,ConfigModule,JwtModule.registerAsync({
     imports:[ConfigModule],
     inject:[IConfigService],
     useFactory:async(configService:IConfigService)=>({

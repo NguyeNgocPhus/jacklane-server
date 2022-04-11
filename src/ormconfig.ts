@@ -11,11 +11,11 @@ export const pgConfig: TypeOrmModuleOptions = {
   password: configService.get("DB_PASSWORD"),
   database: configService.get("DB_DATABASE"),
   entities: ["dist/core/entities/**/*.entity.{ts,js,d.ts}"],
-  migrations: ['src/database/migrations/*.ts'],
+  migrations: ['dist/database/migrations/*.ts'],
   migrationsTableName: 'migration',
   synchronize:false,
   cli: {
-    migrationsDir: 'src/database/migrations',
+    migrationsDir: 'dist/database/migrations',
   },
   logging: "all",
   maxQueryExecutionTime: 1000,//log all queries which run more then 1 second.

@@ -12,6 +12,14 @@ import { classes } from '@automapper/classes';
 import { AutoMapppers } from './infrastructure/mapping';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationModule } from './infrastructure/common/authentication/authentication.module';
+import { IsValidEmailContains } from './core/common/validator/check-valid-email.validator';
+import { IsValidPhoneContains } from './core/common/validator/check-valid-phone.validator';
+import { PassportModule } from '@nestjs/passport';
+import { PasswordModule } from './infrastructure/common/services/password/password.module';
+import { ProductModule } from './infrastructure/components/product/product.module';
+import { ProductImageModule } from './infrastructure/components/product-image/productImage.module';
+import { ProductDetailModule } from './infrastructure/components/product-detail/productDetail.module';
+import { TypeProductModule } from './infrastructure/components/type-product/typeproduct.module';
 
 
 @Module({
@@ -40,7 +48,7 @@ import { AuthenticationModule } from './infrastructure/common/authentication/aut
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: ['dist/core/entities/**/*.entity.{ts,js,d.ts}'],
-        migrations: ['dist/database/*.js'],
+        migrations: ['dist/database/migrations/*.js'],
         autoLoadEntities: true,
         synchronize: false,
         migrationsTableName: 'migration',
@@ -53,12 +61,19 @@ import { AuthenticationModule } from './infrastructure/common/authentication/aut
     }),
     TypeOrmModule.forFeature([...Repositories]),
     UserModule,
+    ProductModule,
+    ProductImageModule,
+    ProductDetailModule,
+    TypeProductModule,
+    PasswordModule
 
   ],
   controllers: [AppController],
   providers: [
     AppService,
     ...AutoMapppers,
+    IsValidEmailContains,
+    IsValidPhoneContains
   ],
 })
 export class AppModule {

@@ -10,12 +10,18 @@ export class UserRepository extends Repository<UserReadModel>{
   constructor() {
     super()
   }
-  async createUserAsync(user:CreateUserDto){
+  async createUserAsync(user:UserReadModel){
 
     return await this.save(user);
   }
   async getUserById(id:string){
-    return await  this.find({id})
+    return await  this.findOne({id})
+  }
+  async getUserByEmailAsync(email:string){
+    return await this.findOne({email})
+  }
+  async getUserByPhoneAsync(phone:string){
+    return await this.findOne({phone})
   }
 
 }
