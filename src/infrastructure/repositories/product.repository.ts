@@ -17,4 +17,9 @@ export class ProductRepository extends Repository<ProductReadModel>{
   async getProductById(id:string){
     return await  this.findOne({id});
   }
+  async getAllProduct(){
+    return await  this.find({
+      relations:['productDetails']
+    });
+  }
 }

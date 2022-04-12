@@ -13,7 +13,6 @@ export class CreateProductRequestDto {
   code:string;
 
   @IsNotEmpty()
-  @IsNumber()
   price:number;
 
   @IsNotEmpty()

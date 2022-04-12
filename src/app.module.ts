@@ -21,10 +21,15 @@ import { TypeProductModule } from './infrastructure/components/type-product/type
 import { CartModule } from './infrastructure/components/cart/cart.module';
 import { IsValidTypeProductContains } from './core/common/validator/check-valid-typeProduct.validator';
 import { IsValidProductContains } from './core/common/validator/check-valid-product.validator';
-
+import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'src/images/'),
+    }),
     AuthenticationModule,
     AutomapperModule.forRoot({
       options: [{ name: 'APP_MAPPER', pluginInitializer: classes }],

@@ -2,22 +2,25 @@ import { BaseEntity } from './ base.entity';
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 import { UserReadModel } from './user.entity';
 import { ProductReadModel } from './product.entity';
+import { AutoMap } from '@automapper/classes';
 
 
 @Entity()
 export class CartReadModel extends BaseEntity{
+  @AutoMap()
   @Column()
   color:string;
-
+  @AutoMap()
   @Column()
   size:string;
-
+  @AutoMap()
   @Column()
-  amount:string;
-
+  amount:number;
+  @AutoMap()
   @Column()
   productId:string;
 
+  @AutoMap()
   @Column()
   userId:string;
 
