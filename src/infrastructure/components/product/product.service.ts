@@ -21,17 +21,21 @@ export class ProductService {
   ) {
   }
 
-  async createProductAsync(files: Array<Express.Multer.File>, body: CreateProductRequestDto, user: Claim) {
-    const existedProduct = await this.productRepository.getProductByCodeOrName(body.code, body.name);
+  async createProductAsync(body: CreateProductRequestDto, user: Claim) {
+    const existedProduct = await this.productRepository.getProductByCodeOrName(body.name);
 
     if (existedProduct) {
       throw  new BadRequestException({ message: 'duplicate name or code' });
     }
+    const slug = body.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+    //
+    const code = slug.split('-').map(a=>{return a[0]}).join('').toLocaleUpperCase()+'-'+Math.random().toString().slice(-4);
     const productReadModel = new ProductReadModel();
     productReadModel.id = UuidHelper.newUuid();
     productReadModel.price = body.price;
-    productReadModel.name = body.name;
-    productReadModel.code = body.code;
+    productReadModel.name = body.name.toLocaleLowerCase();
+    productReadModel.nameSlug = slug;
+    productReadModel.code = code;
     productReadModel.typeProductId = body.typeProductId;
     productReadModel.normalizedName = body.name.toLocaleUpperCase();
     productReadModel.modifiedDate = DateTimeHelper.getNowUnix();
@@ -42,20 +46,7 @@ export class ProductService {
     productReadModel.createdById = user.id;
 
     const product = await this.productRepository.createProduct(productReadModel);
-    files.map(async(file,index) => {
-      const productImage = new ImageProductReadModel();
-      productImage.name = file.filename;
-      productImage.mimetype = file.mimetype;
-      productImage.productId = product.id;
-      productImage.modifiedDate = DateTimeHelper.getNowUnix();
-      productImage.modifiedByName = user.name;
-      productImage.modifiedById = user.id;
-      productImage.createdDate = DateTimeHelper.getNowUnix();
-      productImage.createdByName = user.name;
-      productImage.createdById = user.id
-      // console.log(index);
-      await this.productImageService.createProductImageAsync(productImage);
-    });
+
     // console.log(100);
     return this.mapper.map(product, CreateProductResponseDto, ProductReadModel);
   }
@@ -73,6 +64,7 @@ export class ProductService {
 
     return products;
   }
+
 
 
 }

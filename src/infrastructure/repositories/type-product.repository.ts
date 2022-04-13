@@ -19,4 +19,20 @@ export class TypeProductRepository extends Repository<TypeProductReadModel>{
   async getTypeProductById(id:string){
     return await this.findOne({id});
   }
+  async getAllTypeProduct(){
+    return await this.find();
+  }
+  async deleteAllTypeProduct(id:string){
+    return await this.delete({id});
+  }
+  async getTypeProductBySlug(nameSlug:string){
+    const result= await this.createQueryBuilder('type_product')
+      .leftJoinAndSelect('type_product.products','p')
+      .leftJoinAndSelect('p.productDetails','pd')
+      .leftJoinAndSelect('p.images','img')
+      .where("type_product.nameSlug = :nameSlug",{nameSlug:nameSlug})
+      .select(['type_product.id','type_product.name','p.id','p.name','pd.colorName','img.name'])
+      .getOne()
+    return result;
+  }
 }

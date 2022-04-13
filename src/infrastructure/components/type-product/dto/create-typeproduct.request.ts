@@ -7,9 +7,6 @@ export class CreateTypeProductDto {
     @IsString()
     name:string;
     @IsNotEmpty()
-    @IsString()
-    code:string;
-    @IsNotEmpty()
     @IsEnum(TypeProductEnum)
     type:TypeProductEnum;
 }

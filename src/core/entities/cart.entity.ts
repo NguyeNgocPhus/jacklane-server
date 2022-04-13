@@ -30,7 +30,7 @@ export class CartReadModel extends BaseEntity{
   user:UserReadModel;
 
 
-  @ManyToOne(()=>ProductReadModel,(product)=>product.carts)
+  @ManyToOne(()=>ProductReadModel,(product)=>product.carts ,{onDelete:"CASCADE"})
   @JoinColumn({name:'productId'})
   product:ProductReadModel;
 }

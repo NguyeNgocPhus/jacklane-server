@@ -3,6 +3,8 @@ import { AutoMap } from '@automapper/classes';
 
 export class CreateProductResponseDto {
   @AutoMap()
+  id:string;
+  @AutoMap()
   name:string;
 
   @AutoMap()
@@ -10,7 +12,8 @@ export class CreateProductResponseDto {
 
   @AutoMap()
   normalizedName: string;
-
+  @AutoMap()
+  nameSlug: string;
   @AutoMap()
   price:number;
 

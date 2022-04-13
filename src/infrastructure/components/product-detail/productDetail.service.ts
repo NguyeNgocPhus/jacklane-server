@@ -8,15 +8,18 @@ import { ProductDetailReadModel } from '../../../core/entities/productDetail.ent
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CreateProductDetailResponseDto } from './dto/create-product-detail.response.dto';
+import { ImageProductReadModel } from '../../../core/entities/imageProduct.entity';
+import { ProductImageService } from '../product-image/productImage.service';
 
 
 @Injectable()
 export class ProductDetailService{
   constructor(private readonly productDetailRepository : ProductDetailRepository,
-              @InjectMapper() private  readonly mapper : Mapper
+              @InjectMapper() private  readonly mapper : Mapper,
+              private readonly productImageService: ProductImageService,
   ) {
   }
-  async createProductDetailAsync(body:CreateProductDetailRequestDto,user:Claim){
+  async createProductDetailAsync(files :  Array<Express.Multer.File>,body:CreateProductDetailRequestDto,user:Claim){
     const existColor = await this.productDetailRepository.getProductDetailByColorNameOrColorCode(body.colorName,body.colorCode);
 
     if(existColor){
@@ -37,7 +40,20 @@ export class ProductDetailService{
     productDetailReadModel.createdById = user.id;
 
     const productDetail = await this.productDetailRepository.createProductDetail(productDetailReadModel);
-
+    files.map(async(file,index) => {
+      const productImage = new ImageProductReadModel();
+      productImage.name = file.filename;
+      productImage.mimetype = file.mimetype;
+      productImage.productDetailId = productDetail.id;
+      productImage.modifiedDate = DateTimeHelper.getNowUnix();
+      productImage.modifiedByName = user.name;
+      productImage.modifiedById = user.id;
+      productImage.createdDate = DateTimeHelper.getNowUnix();
+      productImage.createdByName = user.name;
+      productImage.createdById = user.id
+      // console.log(index);
+      await this.productImageService.createProductImageAsync(productImage);
+    });
     return this.mapper.map(productDetail,CreateProductDetailResponseDto,ProductDetailReadModel);
 
   }

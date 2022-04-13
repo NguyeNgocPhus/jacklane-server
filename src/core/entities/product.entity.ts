@@ -25,6 +25,11 @@ export class ProductReadModel extends BaseEntity {
   })
   normalizedName: string;
   @AutoMap()
+  @Column({
+    unique: true,
+  })
+  nameSlug :string;
+  @AutoMap()
   @Column()
   price: number;
   @AutoMap()
@@ -36,17 +41,13 @@ export class ProductReadModel extends BaseEntity {
   @Column()
   typeProductId: string;
 
-
-  @ManyToOne(() => TypeProductReadModel, (typeProduct) => typeProduct.products)
+  @ManyToOne(() => TypeProductReadModel, (typeProduct) => typeProduct.products,{onDelete:'CASCADE'})
   @JoinColumn({ name: 'typeProductId' })
   typeProduct: TypeProductReadModel;
 
-  @OneToMany(() => ImageProductReadModel, (image) => image.product)
-  images: ImageProductReadModel[];
-
-  @OneToMany(() => ProductDetailReadModel, (productDetail) => productDetail.product)
+  @OneToMany(() => ProductDetailReadModel, (productDetail) => productDetail.product,{cascade:true})
   productDetails: ProductDetailReadModel[];
 
-  @OneToMany(() => CartReadModel, (cart) => cart.product)
+  @OneToMany(() => CartReadModel, (cart) => cart.product,{cascade:true})
   carts: CartReadModel[];
 }

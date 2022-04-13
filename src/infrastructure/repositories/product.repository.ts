@@ -11,8 +11,8 @@ export class ProductRepository extends Repository<ProductReadModel>{
    async createProduct(data:ProductReadModel){
      return await this.save(data);
    }
-   async getProductByCodeOrName(code:string,name:string){
-     return await  this.findOne({where:[{code},{name}]});
+   async getProductByCodeOrName(name:string){
+     return await  this.findOne({name});
    }
   async getProductById(id:string){
     return await  this.findOne({id});

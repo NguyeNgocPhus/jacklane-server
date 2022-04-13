@@ -9,10 +9,6 @@ export class CreateProductRequestDto {
   name:string;
 
   @IsNotEmpty()
-  @IsString()
-  code:string;
-
-  @IsNotEmpty()
   price:number;
 
   @IsNotEmpty()

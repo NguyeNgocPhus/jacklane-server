@@ -5,11 +5,15 @@ import { AutoMap } from '@automapper/classes';
 
 export class CreateTypeProductResponse {
   @AutoMap()
+  id:string;
+  @AutoMap()
   name:string;
   @AutoMap()
   normalizedName: string;
   @AutoMap()
   code:string;
+  @AutoMap()
+  nameSlug:string;
   @AutoMap()
   type:string;
 

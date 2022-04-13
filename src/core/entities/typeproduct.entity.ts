@@ -27,11 +27,18 @@ export class TypeProductReadModel  extends  BaseEntity{
 
     @AutoMap()
     @Column({
-        unique:true
+        unique:true,
+        nullable:true
+    })
+    nameSlug:string;
+
+    @AutoMap()
+    @Column({
+        unique:true,
     })
     code:string;
 
-    @OneToMany(()=>ProductReadModel,(product)=>product.typeProduct)
+    @OneToMany(()=>ProductReadModel,(product)=>product.typeProduct ,{cascade:true})
     products:ProductReadModel[]
 
 

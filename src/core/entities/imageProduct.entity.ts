@@ -1,6 +1,7 @@
 import { BaseEntity } from './ base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ProductReadModel } from './product.entity';
+import { ProductDetailReadModel } from './productDetail.entity';
 
 @Entity()
 export class ImageProductReadModel extends BaseEntity{
@@ -11,10 +12,10 @@ export class ImageProductReadModel extends BaseEntity{
   mimetype:string;
 
   @Column()
-  productId:string;
+  productDetailId:string;
 
 
-  @ManyToOne(()=>ProductReadModel,(product)=>product.images)
+  @ManyToOne(()=>ProductDetailReadModel,(productDetail)=>productDetail.images,{onDelete:'CASCADE'})
   @JoinColumn({name:"productId"})
-  product:ProductReadModel;
+  productDetail:ProductDetailReadModel;
 }

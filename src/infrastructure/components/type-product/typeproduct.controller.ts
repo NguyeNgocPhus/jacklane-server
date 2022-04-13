@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards,Request } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request, Get, Delete, Param } from '@nestjs/common';
 import { TypeProductService } from './typeproduct.service';
 import { PermConst } from '../../common/constants/perm.contants';
 import { JwtStrategy } from '../../common/authentication/strategies/jwt.strategy';
@@ -26,4 +26,36 @@ export class TypeProductController {
       throw e;
     }
   }
+
+  @Get()
+  async getAllTypeProduct(){
+    try {
+        const result = await this.typeProductService.getAllTypeProductAsync();
+        return result;
+    }catch (e) {
+      throw e;
+    }
+  }
+
+  @Delete()
+  async deleteAll(){
+    try {
+      const result = await this.typeProductService.deleteAllTypeProductAsync();
+      return result;
+    }catch (e) {
+      throw e;
+    }
+  }
+
+  @Get("/:nameSlug")
+  async getTypeProductBySlug(@Param('nameSlug') nameSlug:string){
+    try {
+      const result = await this.typeProductService.getTypeProductBySlug(nameSlug);
+      return result;
+    }catch (e) {
+      throw e;
+    }
+  }
+
+
 }

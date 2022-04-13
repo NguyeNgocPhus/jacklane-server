@@ -32,28 +32,11 @@ export class ProductController {
   }
 
   @Post()
-  @UseInterceptors(AnyFilesInterceptor({
-    storage: diskStorage({
-      destination: (req, file, cb) => {
-        if (file.mimetype !== fileTypeEnum.JPEG && file.mimetype !== fileTypeEnum.PNG && file.mimetype !== fileTypeEnum.JPG) {
-          cb(new BadRequestException({ message: 'sai kieu' }), null);
-        } else {
-          cb(null, './src/images');
-        }
-
-      },
-      filename: (req, file, cb) => {
-        const filename = convertStringToSlug(path.parse(file.originalname).name);
-        const mimetype = path.parse(file.originalname).ext;
-        cb(null, `${filename}_${Date.now()}${mimetype}`);
-      },
-    }),
-  }))
   @Permissions(PermConst.ADMIN)
   @UseGuards(JwtAuthGuards, PermissionGuard)
-  async createProduct(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body: CreateProductRequestDto, @Request() req) {
+  async createProduct(@Body() body: CreateProductRequestDto, @Request() req) {
     try {
-        const result = await this.productService.createProductAsync(files,body,req.user);
+        const result = await this.productService.createProductAsync(body,req.user);
         return result;
 
     } catch (e) {
@@ -81,6 +64,7 @@ export class ProductController {
       throw e;
     }
   }
+
 
 
 }
