@@ -7,14 +7,10 @@ import { ImageProductReadModel } from './imageProduct.entity';
 @Entity()
 export class ProductDetailReadModel extends BaseEntity {
   @AutoMap()
-  @Column({
-    unique:true
-  })
+  @Column()
   colorName:string;
   @AutoMap()
-  @Column({
-    unique:true
-  })
+  @Column()
   colorCode:string;
   @AutoMap()
   @Column("varchar", { array: true })

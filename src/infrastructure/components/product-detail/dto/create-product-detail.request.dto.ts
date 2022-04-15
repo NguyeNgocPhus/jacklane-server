@@ -12,12 +12,10 @@ export class CreateProductDetailRequestDto {
   colorCode:string
 
   @IsNotEmpty()
-  @IsArray()
-  size:string[];
+  size:string;
 
   @IsNotEmpty()
-  @IsNumber()
-  amount:number;
+  amount:string;
 
   @IsNotEmpty()
   @IsString()

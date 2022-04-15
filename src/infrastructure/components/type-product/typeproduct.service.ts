@@ -3,7 +3,7 @@ import { TypeProductRepository } from '../../repositories/type-product.repositor
 import { CreateTypeProductDto } from './dto/create-typeproduct.request';
 import { Claim } from '../../common/authentication/claims/claims';
 import { TypeProductReadModel } from '../../../core/entities/typeproduct.entity';
-import { DateTimeHelper, UuidHelper } from '../../common/helper';
+import { convertStringToSlug, DateTimeHelper, UuidHelper } from '../../common/helper';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CreateTypeProductResponse } from './dto/create-typeproduct.response';
@@ -25,6 +25,7 @@ export class TypeProductService{
       }
 
       const slug = body.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
       const code = body.type+'-'+Math.random().toString().slice(-6);
       const typeProductReadModel = new TypeProductReadModel();
       typeProductReadModel.id = UuidHelper.newUuid();
@@ -59,6 +60,26 @@ export class TypeProductService{
   }
   async getTypeProductBySlug(nameSlug:string) {
     const data =  await  this.typeProductRepository.getTypeProductBySlug(nameSlug);
-    return data;
+    const colors = [];
+    const size = [];
+
+    data.products.map((product)=>{
+        product.productDetails.forEach((prd)=>{
+           let check = colors.find(color => color.colorCode === prd.colorCode);
+           if(!check){
+             colors.push({colorCode: prd.colorCode,colorName:prd.colorName});
+           }
+           prd.size.forEach((s)=>{
+             if(!size.find(i=>i===s)){
+               size.push(s);
+             }
+           })
+        })
+    })
+    return {
+      data,
+      colors,
+      size
+    };
   }
 }

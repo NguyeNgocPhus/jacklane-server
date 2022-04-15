@@ -12,7 +12,12 @@ export class ProductDetailRepository extends Repository<ProductDetailReadModel>{
   async createProductDetail(data:ProductDetailReadModel){
     return await this.save(data);
   }
-  async getProductDetailByColorNameOrColorCode(colorName:string,colorCode:string){
-    return await  this.findOne({where:[{colorName},{colorCode}]});
+  async getProductDetailByColorNameOrColorCode(colorName:string,colorCode:string , productId:string){
+    const result =  await  this.createQueryBuilder('productD')
+      .where("productD.colorCode = :colorCode",{colorCode:colorCode})
+      .andWhere("productD.colorName = :colorName",{colorName:colorName})
+      .andWhere("productD.productId = :productId",{productId:productId})
+      .getOne()
+    return result;
   }
 }

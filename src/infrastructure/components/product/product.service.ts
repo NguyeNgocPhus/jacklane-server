@@ -3,7 +3,7 @@ import { ProductRepository } from '../../repositories/product.repository';
 import { CreateProductRequestDto } from './dto/create-product.request.dto';
 import { Claim } from '../../common/authentication/claims/claims';
 import { TypeProductReadModel } from '../../../core/entities/typeproduct.entity';
-import { DateTimeHelper, UuidHelper } from '../../common/helper';
+import { convertStringToSlug, DateTimeHelper, UuidHelper } from '../../common/helper';
 import { ProductReadModel } from '../../../core/entities/product.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
@@ -27,8 +27,7 @@ export class ProductService {
     if (existedProduct) {
       throw  new BadRequestException({ message: 'duplicate name or code' });
     }
-    const slug = body.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-    //
+    const slug = convertStringToSlug.convert(body.name.toLowerCase())
     const code = slug.split('-').map(a=>{return a[0]}).join('').toLocaleUpperCase()+'-'+Math.random().toString().slice(-4);
     const productReadModel = new ProductReadModel();
     productReadModel.id = UuidHelper.newUuid();

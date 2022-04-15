@@ -10,34 +10,24 @@ import { diskStorage } from 'multer';
 import { fileTypeEnum } from '../../../core/common/enum/fileUpload';
 import { convertStringToSlug } from '../../common/helper';
 import * as path from "path";
+import { ProductRepository } from '../../repositories/product.repository';
+import LocalFilesInterceptor from '../../common/upload-image';
 
 @Controller('/product-detail')
 export class ProductDetailController {
-  constructor(private readonly productDetailService:ProductDetailService) {
+  constructor(private readonly productDetailService:ProductDetailService,private productRepository:ProductRepository) {
   }
 
   @Post()
-  @UseInterceptors(AnyFilesInterceptor({
-    storage: diskStorage({
-      destination: (req, file, cb) => {
-        if (file.mimetype !== fileTypeEnum.JPEG && file.mimetype !== fileTypeEnum.PNG && file.mimetype !== fileTypeEnum.JPG) {
-          cb(new BadRequestException({ message: 'sai kieu' }), null);
-        } else {
-          cb(null, './src/images');
-        }
-
-      },
-      filename: (req, file, cb) => {
-        const filename = convertStringToSlug(path.parse(file.originalname).name);
-        const mimetype = path.parse(file.originalname).ext;
-        cb(null, `${filename}_${Date.now()}${mimetype}`);
-      },
-    }),
-  }))
+  @UseInterceptors(LocalFilesInterceptor())
   @Permissions(PermConst.ADMIN)
   @UseGuards(JwtAuthGuards,PermissionGuard)
   async createProductDetail(@UploadedFiles() files: Array<Express.Multer.File>,@Body() body:CreateProductDetailRequestDto,@Request() req){
       try {
+        if(files.length === 0){
+          throw new BadRequestException({message:"vui long upload anh"})
+        }
+
         const result = await this.productDetailService.createProductDetailAsync(files,body,req.user);
         return result;
       }catch (e) {

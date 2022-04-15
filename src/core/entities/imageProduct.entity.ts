@@ -11,11 +11,10 @@ export class ImageProductReadModel extends BaseEntity{
   @Column()
   mimetype:string;
 
-  @Column()
+  @Column({nullable:true})
   productDetailId:string;
 
-
   @ManyToOne(()=>ProductDetailReadModel,(productDetail)=>productDetail.images,{onDelete:'CASCADE'})
-  @JoinColumn({name:"productId"})
+  @JoinColumn({name:"productDetailId"})
   productDetail:ProductDetailReadModel;
 }

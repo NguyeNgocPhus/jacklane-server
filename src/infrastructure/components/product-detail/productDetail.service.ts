@@ -20,17 +20,18 @@ export class ProductDetailService{
   ) {
   }
   async createProductDetailAsync(files :  Array<Express.Multer.File>,body:CreateProductDetailRequestDto,user:Claim){
-    const existColor = await this.productDetailRepository.getProductDetailByColorNameOrColorCode(body.colorName,body.colorCode);
+    const existColor = await this.productDetailRepository.getProductDetailByColorNameOrColorCode(body.colorName,body.colorCode,body.productId);
 
     if(existColor){
-      throw new BadRequestException({message:"duplicate color"})
+      throw new BadRequestException({message:"duplicate color with this product"})
     }
+    const size = body.size.split(',')
     const productDetailReadModel = new ProductDetailReadModel();
     productDetailReadModel.id = UuidHelper.newUuid();
     productDetailReadModel.colorCode = body.colorCode;
     productDetailReadModel.colorName = body.colorName;
-    productDetailReadModel.amount = body.amount;
-    productDetailReadModel.size = body.size;
+    productDetailReadModel.amount = parseInt(body.amount);
+    productDetailReadModel.size = size;
     productDetailReadModel.productId = body.productId;
     productDetailReadModel.modifiedDate = DateTimeHelper.getNowUnix();
     productDetailReadModel.modifiedByName = user.name;
@@ -38,20 +39,18 @@ export class ProductDetailService{
     productDetailReadModel.createdDate = DateTimeHelper.getNowUnix();
     productDetailReadModel.createdByName = user.name;
     productDetailReadModel.createdById = user.id;
-
     const productDetail = await this.productDetailRepository.createProductDetail(productDetailReadModel);
     files.map(async(file,index) => {
       const productImage = new ImageProductReadModel();
       productImage.name = file.filename;
       productImage.mimetype = file.mimetype;
-      productImage.productDetailId = productDetail.id;
+      productImage.productDetailId = productDetailReadModel.id;
       productImage.modifiedDate = DateTimeHelper.getNowUnix();
       productImage.modifiedByName = user.name;
       productImage.modifiedById = user.id;
       productImage.createdDate = DateTimeHelper.getNowUnix();
       productImage.createdByName = user.name;
       productImage.createdById = user.id
-      // console.log(index);
       await this.productImageService.createProductImageAsync(productImage);
     });
     return this.mapper.map(productDetail,CreateProductDetailResponseDto,ProductDetailReadModel);

@@ -29,9 +29,9 @@ export class TypeProductRepository extends Repository<TypeProductReadModel>{
     const result= await this.createQueryBuilder('type_product')
       .leftJoinAndSelect('type_product.products','p')
       .leftJoinAndSelect('p.productDetails','pd')
-      .leftJoinAndSelect('p.images','img')
+      .leftJoinAndSelect('pd.images','img')
       .where("type_product.nameSlug = :nameSlug",{nameSlug:nameSlug})
-      .select(['type_product.id','type_product.name','p.id','p.name','pd.colorName','img.name'])
+      // .select(['type_product.products','type_product.name','p.id','p.name',"pd.id",'pd.colorName','img.name'])
       .getOne()
     return result;
   }
